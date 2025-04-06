@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  person-api-service:
+    build: .
+    container_name: personApi
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+        - LOG_LEVEL=debug
+        - TIMEOUT_TIME=3
+        - DATABASE_PORT=5432
+        - DATABASE_USER=postgres
+        - DATABASE_PASSWORD=password
+        - DATABASE_NAME=personapi
+        - DATABASE_HOST=db
+        - SERVER_PORT=8080
+    networks:
+        - internal
+
+  db:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: personapi
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U postgres -d personapi'"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    networks:
+      - internal
+networks:
+  internal:

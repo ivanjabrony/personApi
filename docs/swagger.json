@@ -1,0 +1,428 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Person managing API",
+        "title": "Person API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {
+        "/persons": {
+            "get": {
+                "description": "returning persons with pagination",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "person"
+                ],
+                "summary": "Get all persons with pagination",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number (starting from 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Amount of items on the page",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.PaginatedPersonsDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BadResponseDto"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Updates existing user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "person"
+                ],
+                "summary": "Update user",
+                "parameters": [
+                    {
+                        "description": "Updated data",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdatePersonDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Update success"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BadResponseDto"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates new person",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "person"
+                ],
+                "summary": "Create person",
+                "parameters": [
+                    {
+                        "description": "Person data",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewPersonDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Creating Success"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BadResponseDto"
+                        }
+                    }
+                }
+            }
+        },
+        "/persons/filtered": {
+            "get": {
+                "description": "returning filtered persons with pagination",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "person"
+                ],
+                "summary": "Get all persons with filter and pagination",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "\"Ivan\"",
+                        "description": "Name to match",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"Zabrodin\"",
+                        "description": "Surname to match",
+                        "name": "surname",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"Vladimirovich\"",
+                        "description": "Patronymic to match",
+                        "name": "patronymic",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"male,female\"",
+                        "description": "Collection of genders to match",
+                        "name": "genders",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"RU,KZ\"",
+                        "description": "Collection of nationalities to match",
+                        "name": "nationalities",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"Iv**\"",
+                        "description": "Name pattern to match",
+                        "name": "name_like",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"Za%\"",
+                        "description": "Surname patter to match to match",
+                        "name": "surname_like",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"Vl%\"",
+                        "description": "Patronymic pattern to match",
+                        "name": "patronymic_like",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 0,
+                        "type": "integer",
+                        "description": "Min wanted age",
+                        "name": "age_min",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 110,
+                        "type": "integer",
+                        "description": "Max wanted age",
+                        "name": "age_max",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number (starting from 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Amount of items on the page",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.PaginatedPersonsDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BadResponseDto"
+                        }
+                    }
+                }
+            }
+        },
+        "/persons/{id}": {
+            "get": {
+                "description": "returning person",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "person"
+                ],
+                "summary": "Get person by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of person",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.PersonDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BadResponseDto"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Deletes person by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "person"
+                ],
+                "summary": "Delete person",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Person ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Delete success"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BadResponseDto"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.BadResponseDto": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "Server error"
+                }
+            }
+        },
+        "dto.NewPersonDto": {
+            "type": "object",
+            "required": [
+                "name",
+                "surname"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "Ivan"
+                },
+                "patronymic": {
+                    "type": "string",
+                    "example": "Vladimirovich"
+                },
+                "surname": {
+                    "type": "string",
+                    "example": "Zabrodin"
+                }
+            }
+        },
+        "dto.PaginatedPersonsDto": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.PersonDto"
+                    }
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "page_size": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                },
+                "total_pages": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.PersonDto": {
+            "type": "object",
+            "properties": {
+                "age": {
+                    "type": "integer",
+                    "example": 21
+                },
+                "gender": {
+                    "type": "string",
+                    "example": "male"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Ivan"
+                },
+                "nationality": {
+                    "type": "string",
+                    "example": "russian"
+                },
+                "patronymic": {
+                    "type": "string",
+                    "example": "Vladimirovich"
+                },
+                "surname": {
+                    "type": "string",
+                    "example": "Zabrodin"
+                }
+            }
+        },
+        "dto.UpdatePersonDto": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Ivan"
+                },
+                "patronymic": {
+                    "type": "string",
+                    "example": "Vladimirovich"
+                },
+                "surname": {
+                    "type": "string",
+                    "example": "Zabrodin"
+                }
+            }
+        }
+    }
+}

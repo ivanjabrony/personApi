@@ -1,0 +1,292 @@
+definitions:
+  dto.BadResponseDto:
+    properties:
+      error:
+        example: Server error
+        type: string
+    type: object
+  dto.NewPersonDto:
+    properties:
+      name:
+        example: Ivan
+        type: string
+      patronymic:
+        example: Vladimirovich
+        type: string
+      surname:
+        example: Zabrodin
+        type: string
+    required:
+    - name
+    - surname
+    type: object
+  dto.PaginatedPersonsDto:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dto.PersonDto'
+        type: array
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  dto.PersonDto:
+    properties:
+      age:
+        example: 21
+        type: integer
+      gender:
+        example: male
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Ivan
+        type: string
+      nationality:
+        example: russian
+        type: string
+      patronymic:
+        example: Vladimirovich
+        type: string
+      surname:
+        example: Zabrodin
+        type: string
+    type: object
+  dto.UpdatePersonDto:
+    properties:
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Ivan
+        type: string
+      patronymic:
+        example: Vladimirovich
+        type: string
+      surname:
+        example: Zabrodin
+        type: string
+    required:
+    - id
+    type: object
+info:
+  contact: {}
+  description: Person managing API
+  title: Person API
+  version: "1.0"
+paths:
+  /persons:
+    get:
+      consumes:
+      - application/json
+      description: returning persons with pagination
+      parameters:
+      - default: 1
+        description: Page number (starting from 1)
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Amount of items on the page
+        in: query
+        maximum: 100
+        minimum: 1
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PaginatedPersonsDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.BadResponseDto'
+      summary: Get all persons with pagination
+      tags:
+      - person
+    post:
+      consumes:
+      - application/json
+      description: Creates new person
+      parameters:
+      - description: Person data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.NewPersonDto'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Creating Success
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.BadResponseDto'
+      summary: Create person
+      tags:
+      - person
+    put:
+      consumes:
+      - application/json
+      description: Updates existing user
+      parameters:
+      - description: Updated data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdatePersonDto'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Update success
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.BadResponseDto'
+      summary: Update user
+      tags:
+      - person
+  /persons/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes person by ID
+      parameters:
+      - description: Person ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Delete success
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.BadResponseDto'
+      summary: Delete person
+      tags:
+      - person
+    get:
+      consumes:
+      - application/json
+      description: returning person
+      parameters:
+      - description: ID of person
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PersonDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.BadResponseDto'
+      summary: Get person by ID
+      tags:
+      - person
+  /persons/filtered:
+    get:
+      consumes:
+      - application/json
+      description: returning filtered persons with pagination
+      parameters:
+      - description: Name to match
+        example: '"Ivan"'
+        in: query
+        name: name
+        type: string
+      - description: Surname to match
+        example: '"Zabrodin"'
+        in: query
+        name: surname
+        type: string
+      - description: Patronymic to match
+        example: '"Vladimirovich"'
+        in: query
+        name: patronymic
+        type: string
+      - description: Collection of genders to match
+        example: '"male,female"'
+        in: query
+        name: genders
+        type: string
+      - description: Collection of nationalities to match
+        example: '"RU,KZ"'
+        in: query
+        name: nationalities
+        type: string
+      - description: Name pattern to match
+        example: '"Iv**"'
+        in: query
+        name: name_like
+        type: string
+      - description: Surname patter to match to match
+        example: '"Za%"'
+        in: query
+        name: surname_like
+        type: string
+      - description: Patronymic pattern to match
+        example: '"Vl%"'
+        in: query
+        name: patronymic_like
+        type: string
+      - description: Min wanted age
+        in: query
+        minimum: 0
+        name: age_min
+        type: integer
+      - description: Max wanted age
+        in: query
+        maximum: 110
+        name: age_max
+        type: integer
+      - default: 1
+        description: Page number (starting from 1)
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Amount of items on the page
+        in: query
+        maximum: 100
+        minimum: 1
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PaginatedPersonsDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.BadResponseDto'
+      summary: Get all persons with filter and pagination
+      tags:
+      - person
+swagger: "2.0"
